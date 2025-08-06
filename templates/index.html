@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Claim Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+        .nav-tabs .nav-link {
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            border-top: none;
+        }
+        .status-badge {
+            font-size: 0.8rem;
+        }
+        .currency-input {
+            position: relative;
+        }
+        .currency-symbol {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .currency-input input {
+            padding-left: 25px;
+        }
+        .btn-primary {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .btn-primary:hover {
+            background-color: #5a67d8;
+            border-color: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-header text-center">
+        <div class="container">
+            <h1><i class="fas fa-file-medical me-3"></i>Insurance Claim Management System</h1>
+            <p class="lead mb-0">Comprehensive claim processing and management platform</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="claim-form-tab" data-bs-toggle="tab" data-bs-target="#claim-form" type="button" role="tab">
+                    <i class="fas fa-plus-circle me-2"></i>New/Edit Claim
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="search-tab" data-bs-toggle="tab" data-bs-target="#search-claims" type="button" role="tab">
+                    <i class="fas fa-search me-2"></i>Search Claims
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#statistics" type="button" role="tab">
+                    <i class="fas fa-chart-bar me-2"></i>Statistics
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Claim Form Tab -->
+            <div class="tab-pane fade show active" id="claim-form" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0" id="form-title">
+                            <i class="fas fa-file-plus me-2"></i>New Claim Entry
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="claimForm">
+                            <input type="hidden" id="claimId">
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="entryDate" class="form-label">Entry Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="entryDate" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="admissionDate" class="form-label">Date of Admission <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="admissionDate" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="customerName" class="form-label">Customer Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="customerName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="policyNumber" class="form-label">Policy Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="policyNumber" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="hospitalName" class="form-label">Hospital Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="hospitalName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="companyName" class="form-label">Company Name <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="companyName" required>
+                                        <option value="">Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{ company }}">{{ company }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="tpaName" class="form-label">TPA Name</label>
+                                    <input type="text" class="form-control" id="tpaName" placeholder="Enter TPA Name (Optional)">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="claimNumber" class="form-label">Claim Number</label>
+                                    <input type="text" class="form-control" id="claimNumber">
+                                    <div class="form-text">May be 0 at intimation stage</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="claimStatus" class="form-label">Claim Status <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="claimStatus" required>
+                                        <option value="">Select Status</option>
+                                        {% for status in statuses %}
+                                        <option value="{{ status }}">{{ status }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="claimedAmount" class="form-label">Claimed Amount</label>
+                                    <div class="currency-input">
+                                        <span class="currency-symbol">₹</span>
+                                        <input type="number" class="form-control" id="claimedAmount" step="0.01" min="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="approvedAmount" class="form-label">Approved Amount</label>
+                                    <div class="currency-input">
+                                        <span class="currency-symbol">₹</span>
+                                        <input type="number" class="form-control" id="approvedAmount" step="0.01" min="0">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="claimType" class="form-label">Claim Type <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="claimType" required>
+                                        <option value="">Select Type</option>
+                                        {% for type in types %}
+                                        <option value="{{ type }}">{{ type }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="parentClaim" class="form-label">Link to Main Claim</label>
+                                    <select class="form-select" id="parentClaim" disabled>
+                                        <option value="">Select Main Claim</option>
+                                    </select>
+                                    <div class="form-text">Available for Pre-post and Hospital cash claims</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="remark" class="form-label">Remark</label>
+                                <textarea class="form-control" id="remark" rows="3"></textarea>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Save Claim
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                                    <i class="fas fa-eraser me-2"></i>Clear Form
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="cancelEdit()" id="cancelBtn" style="display: none;">
+                                    <i class="fas fa-times me-2"></i>Cancel Edit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Claims Tab -->
+            <div class="tab-pane fade" id="search-claims" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-filter me-2"></i>Search Criteria
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="searchForm">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="searchCustomer" class="form-label">Customer Name</label>
+                                    <input type="text" class="form-control" id="searchCustomer">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="searchPolicy" class="form-label">Policy Number</label>
+                                    <input type="text" class="form-control" id="searchPolicy">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="searchStatus" class="form-label">Claim Status</label>
+                                    <select class="form-select" id="searchStatus">
+                                        <option value="">All Statuses</option>
+                                        {% for status in statuses %}
+                                        <option value="{{ status }}">{{ status }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="searchCompany" class="form-label">Company</label>
+                                    <select class="form-select" id="searchCompany">
+                                        <option value="">All Companies</option>
+                                        {% for company in companies %}
+                                        <option value="{{ company }}">{{ company }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="searchType" class="form-label">Claim Type</label>
+                                    <select class="form-select" id="searchType">
+                                        <option value="">All Types</option>
+                                        {% for type in types %}
+                                        <option value="{{ type }}">{{ type }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="searchDateFrom" class="form-label">Entry Date From</label>
+                                    <input type="date" class="form-control" id="searchDateFrom">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="searchDateTo" class="form-label">Entry Date To</label>
+                                    <input type="date" class="form-control" id="searchDateTo">
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-2"></i>Search
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="clearSearch()">
+                                    <i class="fas fa-eraser me-2"></i>Clear
+                                </button>
+                                <button type="button" class="btn btn-info" onclick="loadAllClaims()">
+                                    <i class="fas fa-list me-2"></i>Show All
+                                </button>
+                                <button type="button" class="btn btn-success" onclick="exportClaims()">
+                                    <i class="fas fa-download me-2"></i>Export CSV
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-table me-2"></i>Claims List
+                        </h5>
+                        <span class="badge bg-secondary" id="resultsCount">0 claims</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="claimsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Entry Date</th>
+                                        <th>Customer Name</th>
+                                        <th>Policy Number</th>
+                                        <th>Hospital</th>
+                                        <th>Company</th>
+                                        <th>Claim Number</th>
+                                        <th>Status</th>
+                                        <th>Type</th>
+                                        <th>Claimed Amount</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="claimsTableBody">
+                                    <!-- Claims will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div class="tab-pane fade" id="statistics" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>Claims Statistics
+                        </h5>
+                    </div>
+                    <div class="card-body" id="statisticsContent">
+                        <!-- Statistics will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

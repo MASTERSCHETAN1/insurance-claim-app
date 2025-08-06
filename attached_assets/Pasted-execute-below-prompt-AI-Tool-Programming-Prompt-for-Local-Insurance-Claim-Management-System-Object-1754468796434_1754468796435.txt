@@ -1,0 +1,116 @@
+execute below prompt -AI Tool Programming Prompt for Local Insurance Claim Management System
+Objective:
+Build a user-friendly, secure, and feature-complete local program to manage insurance claims, with all data kept in a local database. The system is for daily use by insurance claims processors for health insurance providers.
+
+1. Core Requirements
+Local Data Storage:
+All entries must be stored in a local database (SQLite or similar for single-user, local-first access). Data privacy is essential.
+
+New Claim Entry
+Clicking “New Entry” will open a fillable form with these fields (with validation where appropriate):
+
+Entry date (auto-filled to current date, editable)
+
+Date of admission
+
+Customer name
+
+Policy number
+
+Hospital name
+
+Company name (dropdown: NIVA, HDFC, TATA, CARE, NEW INDIA, NATIONAL, UNITED, ORIENTAL, FUTURE GENERALI)
+
+Claim number (may be 0 at intimation)
+
+Claim status (dropdown: Intimation, Submitted, Approved, Declined, Reconsideration, Settled, Additional requirement, ombudsman)
+
+Claimed amount
+
+Approved amount
+
+Claim type (dropdown: Cashless, Reimbursement, Pre-post, Day care, Hospital cash, Health check-up)
+
+Remark (text area)
+
+Form Controls:
+
+Save to database
+
+Clear/Reset form
+
+Cancel entry
+
+Edit Existing Claims:
+
+Claims appear as a list/search result.
+
+Clicking an entry opens it in the same entry form, with previous data auto-filled and editable.
+
+Save changes overwrites claim details in the database.
+
+2. Search & Filter
+Search Tab:
+
+Filter/search claims by Customer Name, Policy Number, Claim Status, Claim Type, Company Name (any combination).
+
+Date range filter for Entry Date or Date of Admission (optional; enhances usability).
+
+Flexible criteria: any field can be empty; filter applies on filled fields.
+
+Filtered Result List:
+
+Display columns for essential claim details.
+
+Can click any row to edit/open full claim.
+
+3. Data Export/Import
+Export:
+
+Allow users to export the visible/filtered claim list as an Excel (.xlsx) or CSV (.csv) file.
+
+Exported fields: all claim fields in a structured way.
+
+Import:
+
+Allow user to import data from Excel or CSV files.
+
+Data mapping: Validate imported columns to match database fields and alert user in case of mismatch.
+
+4. User Experience
+Intuitive UI:
+Minimize clicks for common tasks, clear labels, logical arrangement, and error messages.
+
+Date pickers for date fields
+
+Drop-downs for status/type/company fields
+
+Responsive search with quick results
+
+Form Validation:
+
+Prevent incomplete or invalid entries (e.g., amounts cannot be negative, required fields must be filled).
+
+5. Bonus / Advanced Features (suggestions for partial or phased inclusion)
+Role-based access (admin, processor) for multi-user security.
+
+Audit trail (“last modified by/on” stamp) for all entries.
+
+Print claim summary as PDF.
+
+Attach documents (image or PDF upload for claim evidence).
+
+Notification/flag for required additional documents or follow-up.
+
+Dashboard view: totals by status/company/type and recent activity.
+
+6. Technical/Implementation Notes
+Must run offline on Windows or MacOS (standalone executable app).
+
+Recommend using frameworks like Python (Tkinter, PyQt), Electron (JavaScript), or a suitable technology for desktop GUIs.
+
+Secure local storage (password-protected database optional).
+
+This prompt should be given to an AI development tool or programmer to generate a complete, user-friendly, secure insurance claim management system as per your needs, while offering flexibility for further enhancements
+
+Also allow to link per post and hospital cash claim to main reimbursement or cashless claim so they all can show up in group as they are connected 
